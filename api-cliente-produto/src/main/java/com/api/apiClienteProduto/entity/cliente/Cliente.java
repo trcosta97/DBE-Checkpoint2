@@ -37,71 +37,39 @@ public class Cliente {
     private Calendar dataCadastro = Calendar.getInstance();
     @Temporal(TemporalType.DATE)
     private Calendar dataAtualizacao;
+    @OneToMany
+    @JoinColumn(name = "cliente_id")
+    @Column(columnDefinition = "VARCHAR")
     private List<Produto> produtos;
     private boolean ativo = true;
 
-    public Cliente(DadosCadastroClienteDTO dados) {
-        this.nome = dados.nome();
-        this.email = dados.email();
-        this.nomeMae = dados.nomeMae();
-        this.senha = dados.senha();
-        this.telefone = dados.senha();
-        this.idade = dados.idade();
-        this.endereco = dados.endereco();
-        this.cpf = dados.cpf();
-        this.rg = dados.rg();
-        this.pessoaPublica = dados.pessoaPublica();
-        this.renda = dados.renda();
-        this.patrimonio = dados.patrimonio();
-        this.produtos = dados.produtos();
+    public Cliente(Cliente entity) {
+        this.nome = entity.nome;
+        this.email = entity.email;
+        this.nomeMae = entity.nomeMae;
+        this.senha = entity.senha;
+        this.telefone = entity.telefone;
+        this.idade = entity.idade;
+        this.endereco = entity.endereco;
+        this.cpf = entity.cpf;
+        this.rg = entity.rg;
+        this.pessoaPublica = entity.pessoaPublica;
+        this.renda = entity.renda;
+        this.patrimonio = entity.patrimonio;
+        this.dataCadastro = entity.dataCadastro;
+        this.dataAtualizacao = entity.dataAtualizacao;
+        this.produtos = entity.produtos;
+        this.ativo = entity.ativo;
+    }
+
+    public void atualizar(){
+        this.dataAtualizacao = Calendar.getInstance();
     }
 
     public void excluir(){
         this.ativo = false;
     }
 
-    public void atualizarInformacoes(DadosAtualizacaoClienteDTO dados){
-        this.dataAtualizacao = Calendar.getInstance();
-        if (dados.nome() != null){
-            this.nome = dados.nome();
-        }
-        if (dados.email() != null){
-            this.email = dados.email();
-        }
-        if (dados.nomeMae() != null){
-            this.nomeMae = dados.nomeMae();
-        }
-        if (dados.senha() != null){
-            this.senha = dados.senha();
-        }
-        if (dados.telefone() != null){
-            this.telefone = dados.telefone();
-        }
-        if (dados.idade() != null){
-            this.idade = dados.idade();
-        }
-        if (dados.endereco() != null){
-            this.endereco = dados.endereco();
-        }
-        if (dados.cpf() != null){
-            this.cpf = dados.cpf();
-        }
-        if (dados.rg() != null){
-            this.rg = dados.rg();
-        }
-        if (dados.pessoaPublica() != null){
-            this.pessoaPublica = dados.pessoaPublica();
-        }
-        if (dados.renda() != null){
-            this.renda = dados.renda();
-        }
-        if (dados.patrimonio() != null){
-            this.patrimonio = dados.renda();
-        }
-        if (dados.produtos() != null){
-            this.produtos = dados.produtos();
-        }
 
-    }
 
 }
