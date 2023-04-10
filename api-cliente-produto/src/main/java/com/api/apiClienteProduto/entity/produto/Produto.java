@@ -21,5 +21,12 @@ public class Produto {
     private Calendar dataCadastro = Calendar.getInstance();
     @Temporal(TemporalType.DATE)
     private Calendar dataAtualizacao;
-    private boolean produtoHabilitado;
+    private boolean ativo;
+
+    public Produto(Produto produto) {
+        this.nome = produto.getNome();
+        this.dataCadastro = produto.getDataCadastro();
+        this.dataAtualizacao = produto.getDataAtualizacao();
+        this.ativo = produto.isAtivo();
+    }
 }

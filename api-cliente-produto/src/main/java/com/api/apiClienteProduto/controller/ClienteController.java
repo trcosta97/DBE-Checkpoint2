@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-public class ClientesController {
+public class ClienteController {
 
     @Autowired
     private ClienteService service;
@@ -52,7 +52,7 @@ public class ClientesController {
     }
 
     @GetMapping("/clientes")
-    ResponseEntity<List<Cliente>> all(){
+    public ResponseEntity<List<Cliente>> all(){
         return ResponseEntity.ok(service.getAllClientes());
     }
 
@@ -62,8 +62,8 @@ public class ClientesController {
     }
 
     @PutMapping("/clientes/{id}")
-    public ResponseEntity<Cliente> replaceCliente(@RequestBody Cliente novoCliente, @PathVariable Long id){
-        Cliente clienteAtualizado = service.updateCliente(novoCliente, id);
+    public ResponseEntity<Cliente> replaceCliente(@RequestBody Cliente newCliente, @PathVariable Long id){
+        Cliente clienteAtualizado = service.updateCliente(newCliente, id);
         return ResponseEntity.ofNullable(clienteAtualizado);
     }
 
