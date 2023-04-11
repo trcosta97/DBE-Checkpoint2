@@ -1,13 +1,12 @@
 package com.api.apiClienteProduto.controller;
 
-import com.api.apiClienteProduto.entity.cliente.Cliente;
 import com.api.apiClienteProduto.entity.produto.Produto;
-import com.api.apiClienteProduto.entity.produto.ProdutoRepository;
 import com.api.apiClienteProduto.entity.produto.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
@@ -34,6 +33,7 @@ public class ProdutoController {
 
     }
 
+
     private ResponseEntity <List<Produto>> all(){
         return ResponseEntity.ok(service.getAllProdutos());
     }
@@ -45,8 +45,8 @@ public class ProdutoController {
     }
 
     @DeleteMapping("produtos/{id}")
-    public ResponseEntity<Produto> deleteProduto(@PathVariable Long id){
-        return ResponseEntity.ofNullable(service.deleteProduto(id));
+    public ResponseEntity<Produto> desativarProduto(@PathVariable Long id){
+        return ResponseEntity.ofNullable(service.desativarProduto(id));
     }
 
 

@@ -13,8 +13,13 @@ public class ClienteService {
     private ClienteRepository repository;
 
     public Cliente saveCliente(Cliente cliente){
-       repository.save(cliente);
-       return cliente;
+        List<Cliente> clienteByCpf = repository.findAllByCpf(cliente.getCpf());
+        if(clienteByCpf.size()>=3){
+            throw new RuntimeException("Limite de contas por CPF atingido");
+        }else{
+            repository.save(cliente);
+            return cliente;
+        }
     }
 
     public List<Cliente> getAllClientes(){
@@ -61,6 +66,17 @@ public class ClienteService {
             Cliente cliente = clienteOptional.get();
             repository.delete(cliente);
             return new Cliente(cliente);
+        }
+        return null;
+    }
+
+    public Cliente desativarCliente(Long id){
+        Optional<Cliente> clienteOptional = repository.findById(id);
+        if(clienteOptional.isPresent()){
+            Cliente cliente = clienteOptional.get();
+            cliente.excluir();
+            repository.save(cliente);
+            return cliente;
         }
         return null;
     }

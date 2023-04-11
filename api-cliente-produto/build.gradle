@@ -24,6 +24,7 @@ dependencies {
 	runtimeOnly group: 'com.oracle.database.jdbc', name: 'ojdbc8', version: '21.9.0.0'
 	annotationProcessor 'org.projectlombok:lombok'
 
+
 }
 
 tasks.named('test') {

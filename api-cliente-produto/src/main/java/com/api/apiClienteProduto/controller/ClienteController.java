@@ -1,6 +1,7 @@
 package com.api.apiClienteProduto.controller;
 
 import com.api.apiClienteProduto.entity.cliente.Cliente;
+import com.api.apiClienteProduto.entity.cliente.ClienteRepository;
 import com.api.apiClienteProduto.entity.cliente.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +16,15 @@ public class ClienteController {
     @Autowired
     private ClienteService service;
 
-    @PostMapping("/clientes")
+    @Autowired
+    private ClienteRepository repository;
+
+    @PostMapping("clientes")
     @Transactional
     public ResponseEntity<Cliente> cadastrarCliente(@RequestBody Cliente cliente){
         validarCliente(cliente);
+        validarCPF(cliente.getCpf());
+        validarEmail(cliente.getEmail());
         service.saveCliente(cliente);
         return ResponseEntity.ok(cliente);
     }
@@ -51,7 +57,19 @@ public class ClienteController {
         }
     }
 
-    @GetMapping("/clientes")
+    public void validarCPF(String cpf){
+        if(cpf.length() != 11){
+            throw new IllegalArgumentException("cpf inválido");
+        }
+    }
+
+    public void validarEmail(String email){
+        if(!email.contains("@")){
+            throw new IllegalArgumentException("email inválido");
+        }
+    }
+
+    @GetMapping("clientes")
     public ResponseEntity<List<Cliente>> all(){
         return ResponseEntity.ok(service.getAllClientes());
     }
@@ -62,14 +80,13 @@ public class ClienteController {
     }
 
     @PutMapping("/clientes/{id}")
-    public ResponseEntity<Cliente> replaceCliente(@RequestBody Cliente newCliente, @PathVariable Long id){
-        Cliente clienteAtualizado = service.updateCliente(newCliente, id);
-        return ResponseEntity.ofNullable(clienteAtualizado);
-    }
-
-    @DeleteMapping("/clientes/{id}")
-    public ResponseEntity<Cliente> deleteCliente(@PathVariable Long id){
-        return ResponseEntity.ofNullable(service.deleteCLiente(id));
+    public ResponseEntity<Cliente> desativarCliente(@PathVariable Long id){
+        Cliente clienteDesativado = service.desativarCliente(id);
+        if (clienteDesativado != null) {
+            return ResponseEntity.ok(clienteDesativado);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 

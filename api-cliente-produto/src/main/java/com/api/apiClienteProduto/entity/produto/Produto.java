@@ -29,4 +29,8 @@ public class Produto {
         this.dataAtualizacao = produto.getDataAtualizacao();
         this.ativo = produto.isAtivo();
     }
+
+    public void excluir(){
+        this.ativo = false;
+    }
 }

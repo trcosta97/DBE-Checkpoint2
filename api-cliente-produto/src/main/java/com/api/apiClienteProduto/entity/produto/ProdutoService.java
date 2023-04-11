@@ -1,5 +1,6 @@
 package com.api.apiClienteProduto.entity.produto;
 
+import com.api.apiClienteProduto.entity.cliente.Cliente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,12 +44,13 @@ public class ProdutoService {
         return null;
     }
 
-    public Produto deleteProduto(Long id){
+    public Produto desativarProduto(Long id){
         Optional<Produto> produtoOptional = repository.findById(id);
         if(produtoOptional.isPresent()){
             Produto produto = produtoOptional.get();
-            repository.delete(produto);
-            return new Produto(produto);
+            produto.excluir();
+            repository.save(produto);
+            return produto;
         }
         return null;
     }

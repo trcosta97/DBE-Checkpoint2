@@ -9,4 +9,6 @@ import java.util.stream.DoubleStream;
 
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
     List<Cliente> findAllByAtivoTrue();
+
+    List<Cliente> findAllByCpf(String cpf);
 }
