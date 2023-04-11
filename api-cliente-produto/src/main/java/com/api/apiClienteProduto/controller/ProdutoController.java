@@ -16,7 +16,7 @@ public class ProdutoController {
     @Autowired
     private ProdutoService service;
 
-    @PostMapping("/produtos")
+    @PostMapping("produtos")
     @Transactional
     public ResponseEntity<Produto> cadastrarProduto(@RequestBody Produto produto){
         validarProduto(produto);
@@ -34,11 +34,13 @@ public class ProdutoController {
     }
 
 
-    private ResponseEntity <List<Produto>> all(){
+    @GetMapping("produtos/all")
+    public ResponseEntity<List<Produto>> all(){
         return ResponseEntity.ok(service.getAllProdutos());
     }
 
-    @GetMapping("produtos/{id}")
+
+    @PutMapping("produtos/{id}")
     public ResponseEntity<Produto> replaceProduto(@RequestBody Produto newProduto, @PathVariable Long id){
         Produto produtoAtualizado = service.updateProduto(newProduto, id);
         return ResponseEntity.ofNullable(produtoAtualizado);
