@@ -41,6 +41,7 @@ public class ProdutoController {
 
 
     @PutMapping("produtos/{id}")
+    @Transactional
     public ResponseEntity<Produto> replaceProduto(@RequestBody Produto newProduto, @PathVariable Long id){
         Produto produtoAtualizado = service.updateProduto(newProduto, id);
         return ResponseEntity.ofNullable(produtoAtualizado);
