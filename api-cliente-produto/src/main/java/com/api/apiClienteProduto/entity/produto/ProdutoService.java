@@ -40,6 +40,7 @@ public class ProdutoService {
             produto.setDataCadastro(newProduto.getDataCadastro());
             produto.setDataAtualizacao(newProduto.getDataAtualizacao());
             produto.setAtivo(newProduto.isAtivo());
+            return produto;
         }
         return null;
     }

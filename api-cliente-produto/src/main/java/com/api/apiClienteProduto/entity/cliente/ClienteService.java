@@ -55,7 +55,7 @@ public class ClienteService {
             cliente.setDataAtualizacao(newCliente.getDataAtualizacao());
             cliente.setProdutos(newCliente.getProdutos());
             cliente.setAtivo(newCliente.isAtivo());
-            return newCliente;
+            return cliente;
         }
         return null;
     }

@@ -77,7 +77,7 @@ public class ClienteController {
         validarCliente(clienteAtualizado);
         validarCPF(clienteAtualizado.getCpf());
         validarEmail(clienteAtualizado.getEmail());
-        return ResponseEntity.ofNullable(clienteAtualizado);
+        return ResponseEntity.ok(clienteAtualizado);
 
     }
 
@@ -101,7 +101,7 @@ public class ClienteController {
 
 
 
-    @GetMapping("clientes")
+    @GetMapping("clientes/all")
     public ResponseEntity<List<Cliente>> all(){
         return ResponseEntity.ok(service.getAllClientes());
     }
