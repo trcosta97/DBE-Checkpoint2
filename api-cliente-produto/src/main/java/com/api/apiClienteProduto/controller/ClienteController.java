@@ -17,10 +17,8 @@ public class ClienteController {
     @Autowired
     private ClienteService service;
 
-    @Autowired
-    private ClienteRepository repository;
 
-    @PostMapping("clientes")
+    @PostMapping("/clientes")
     @Transactional
     public ResponseEntity<Cliente> cadastrarCliente(@RequestBody Cliente cliente){
         validarCliente(cliente);
@@ -70,9 +68,9 @@ public class ClienteController {
         }
     }
 
-    @PutMapping("clientes/update/{id}")
+    @PutMapping("/clientes/update/{id}")
     @Transactional
-    public ResponseEntity<Cliente> update(@RequestBody Cliente newCliente, @PathVariable Long id){
+    public ResponseEntity<Cliente> replaceProduto(@RequestBody Cliente newCliente, @PathVariable Long id){
         Cliente clienteAtualizado = service.updateCliente(newCliente, id);
         validarCliente(clienteAtualizado);
         validarCPF(clienteAtualizado.getCpf());
@@ -81,45 +79,33 @@ public class ClienteController {
 
     }
 
-    @PutMapping("clientes/addProduto/{id}")
+    @PutMapping("/clientes/addProduto/{id}")
     @Transactional
-    public ResponseEntity<Cliente> addProduto(@RequestBody Produto produto, @PathVariable Long id){
-        Cliente newCliente = service.findById(id);
-        newCliente.getProdutos().add(produto);
-        Cliente clienteAtualizado = service.updateCliente(newCliente, id);
+    public ResponseEntity<Cliente> adicionarProduto(@RequestBody Produto produto, @PathVariable Long id){
+        Cliente clienteAtualizado = service.addProduto(produto, id);
         return ResponseEntity.ofNullable(clienteAtualizado);
     }
 
-    @PutMapping("clientes/delProduto/{id}")
+    @PutMapping("/clientes/delProduto/{id}")
     @Transactional
-    public ResponseEntity<Cliente> delProduto(@RequestBody Produto produto, @PathVariable Long id){
-        Cliente newCliente = service.findById(id);
-        newCliente.getProdutos().remove(produto);
-        Cliente clienteAtualizado = service.updateCliente(newCliente, id);
+    public ResponseEntity<Cliente> removerProduto(@RequestBody Produto produto, @PathVariable Long id){
+        Cliente clienteAtualizado = service.delProduto(produto, id);
         return ResponseEntity.ofNullable(clienteAtualizado);
     }
 
-
-
-    @GetMapping("clientes/all")
+    @GetMapping("/clientes/all")
     public ResponseEntity<List<Cliente>> all(){
         return ResponseEntity.ok(service.getAllClientes());
     }
 
-    @GetMapping("/employee/{id}")
+    @GetMapping("/clientes/{id}")
     public ResponseEntity<Cliente> one(@PathVariable Long id){
         return ResponseEntity.ofNullable(service.findById(id));
     }
 
-    @PutMapping("/clientes/{id}")
-    @Transactional
-    public ResponseEntity<Cliente> desativarCliente(@PathVariable Long id){
-        Cliente clienteDesativado = service.desativarCliente(id);
-        if (clienteDesativado != null) {
-            return ResponseEntity.ok(clienteDesativado);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @DeleteMapping("/clientes/{id}")
+    public ResponseEntity<Cliente> desativarProduto(@PathVariable Long id){
+        return ResponseEntity.ofNullable(service.desativarCliente(id));
     }
 
 

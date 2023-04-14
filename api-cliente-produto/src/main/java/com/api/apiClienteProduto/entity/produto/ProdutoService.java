@@ -4,6 +4,7 @@ import com.api.apiClienteProduto.entity.cliente.Cliente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,8 +39,9 @@ public class ProdutoService {
             Produto produto = produtoOptional.get();
             produto.setNome(newProduto.getNome());
             produto.setDataCadastro(newProduto.getDataCadastro());
-            produto.setDataAtualizacao(newProduto.getDataAtualizacao());
+            produto.setDataAtualizacao(Calendar.getInstance());
             produto.setAtivo(newProduto.isAtivo());
+            repository.save(newProduto);
             return produto;
         }
         return null;

@@ -1,8 +1,10 @@
 package com.api.apiClienteProduto.entity.cliente;
 
+import com.api.apiClienteProduto.entity.produto.Produto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,7 +25,7 @@ public class ClienteService {
     }
 
     public List<Cliente> getAllClientes(){
-        return repository.findAll()
+        return repository.findAllByAtivoTrue()
                 .stream().map(Cliente::new).toList();
     }
 
@@ -35,9 +37,9 @@ public class ClienteService {
         return null;
     }
 
-    public Cliente updateCliente(Cliente newCliente, Long id){
+    public Cliente updateCliente(Cliente newCliente, Long id) {
         Optional<Cliente> clienteOptional = repository.findById(id);
-        if(clienteOptional.isPresent()){
+        if (clienteOptional.isPresent()) {
             Cliente cliente = clienteOptional.get();
             cliente.setNome(newCliente.getNome());
             cliente.setEmail(newCliente.getEmail());
@@ -52,13 +54,44 @@ public class ClienteService {
             cliente.setRenda(newCliente.getRenda());
             cliente.setPatrimonio(newCliente.getPatrimonio());
             cliente.setDataCadastro(newCliente.getDataCadastro());
-            cliente.setDataAtualizacao(newCliente.getDataAtualizacao());
+            cliente.setDataAtualizacao(Calendar.getInstance());
             cliente.setProdutos(newCliente.getProdutos());
             cliente.setAtivo(newCliente.isAtivo());
+            repository.save(newCliente);
+            return cliente;
+
+        }
+        return null;
+    }
+
+    public Cliente addProduto(Produto newProduto, Long id){
+        Optional<Cliente> clienteOptional = repository.findById(id);
+        if(clienteOptional.isPresent()){
+            Cliente cliente = clienteOptional.get();
+            cliente.getProdutos().add(newProduto);
+            repository.save(cliente);
             return cliente;
         }
         return null;
     }
+
+    public Cliente delProduto(Produto produto, Long id){
+        Optional<Cliente> clienteOptional = repository.findById(id);
+        if(clienteOptional.isPresent()){
+            Cliente cliente = clienteOptional.get();
+            if(cliente.getProdutos().contains(produto)){
+                cliente.getProdutos().remove(produto);
+                repository.save(cliente);
+                return cliente;
+            }else{
+                throw new IllegalArgumentException();
+            }
+        }
+        return null;
+    }
+
+
+
 
     public Cliente deleteCLiente(Long id){
         Optional<Cliente> clienteOptional = repository.findById(id);

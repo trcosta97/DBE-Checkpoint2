@@ -62,10 +62,6 @@ public class Cliente {
         this.ativo = entity.ativo;
     }
 
-    public void atualizar(){
-        this.dataAtualizacao = Calendar.getInstance();
-    }
-
     public void excluir(){
         this.ativo = false;
     }
