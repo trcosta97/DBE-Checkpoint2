@@ -67,7 +67,18 @@ public class UsuarioController {
         }
     }
 
-    @PutMapping("/usuarios/update/{id}")
+    @GetMapping("/usuarios/all")
+    public ResponseEntity<List<Usuario>> all(){
+        return ResponseEntity.ok(service.getAllUsuarios());
+    }
+
+    @GetMapping("/usuarios/{id}")
+    public ResponseEntity<Usuario> one(@PathVariable Long id){
+        return ResponseEntity.ofNullable(service.findById(id));
+    }
+
+
+    @PutMapping("/usuarios/{id}")
     @Transactional
     public ResponseEntity<Usuario> replaceUsuario(@RequestBody Usuario newUsuario, @PathVariable Long id){
         Usuario usuarioAtualizado = service.updateUsuario(newUsuario, id);
@@ -92,15 +103,7 @@ public class UsuarioController {
         return ResponseEntity.ofNullable(usuarioAtualizado);
     }
 
-    @GetMapping("/usuarios/all")
-    public ResponseEntity<List<Usuario>> all(){
-        return ResponseEntity.ok(service.getAllUsuarios());
-    }
 
-    @GetMapping("/usuarios/{id}")
-    public ResponseEntity<Usuario> one(@PathVariable Long id){
-        return ResponseEntity.ofNullable(service.findById(id));
-    }
 
     @DeleteMapping("/usuarios/{id}")
     public ResponseEntity<Usuario> desativarUsuario(@PathVariable Long id){

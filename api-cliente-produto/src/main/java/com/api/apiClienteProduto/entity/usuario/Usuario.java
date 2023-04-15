@@ -5,11 +5,12 @@ import com.api.apiClienteProduto.entity.produto.Produto;
 import jakarta.persistence.*;
 import lombok.*;
 
+
 import java.util.Calendar;
 import java.util.List;
 
-@Entity(name="Cliente")
-@Table(name="clientes")
+@Entity(name="Usuario")
+@Table(name="t_usuarios")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -17,29 +18,43 @@ import java.util.List;
 @EqualsAndHashCode(of = "id")
 public class Usuario {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id_usuario")
     private Long id;
+    @Column(name = "nome_usuario")
     private String nome;
-    @Column(unique = true)
+    @Column(name="email_usuario", unique = true)
     private String email;
+    @Column(name = "nome_mae_usuario")
     private String nomeMae;
+    @Column(name="senha_usuario")
     private String senha;
+    @Column(name = "telefone_usuario")
     private String telefone;
+    @Column(name="idade_usuario")
     private Integer idade;
     @Embedded
+    @Column(name="endereco_usuario")
     private Endereco endereco;
+    @Column(name="cpf_usuario")
     private String cpf;
+    @Column(name = "rg_usuario")
     private String rg;
+    @Column(name="pessoa_publica_usuario")
     private boolean pessoaPublica;
+    @Column(name = "renda_usuario")
     private Float renda;
+    @Column(name = "patrimonio_usuario")
     private Float patrimonio;
     @Temporal(TemporalType.DATE)
+    @Column(name = "data_cadastro_usuario")
     private Calendar dataCadastro = Calendar.getInstance();
     @Temporal(TemporalType.DATE)
+    @Column(name = "data_atualizacao_usuario")
     private Calendar dataAtualizacao;
     @OneToMany
     @JoinColumn(name = "cliente_id")
-    @Column(columnDefinition = "VARCHAR")
+    @Column(columnDefinition = "VARCHAR", name = "produtos_usuario")
     private List<Produto> produtos;
     private boolean ativo = true;
 

@@ -6,7 +6,7 @@ import lombok.*;
 import java.util.Calendar;
 
 @Entity(name="Produto")
-@Table(name="produtos")
+@Table(name="t_produtos")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -14,12 +14,14 @@ import java.util.Calendar;
 @EqualsAndHashCode(of = "id")
 public class Produto {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(name = "nome_produto")
     private String nome;
     @Temporal(TemporalType.DATE)
     private Calendar dataCadastro = Calendar.getInstance();
     @Temporal(TemporalType.DATE)
+    @Column(name="data_atualziacao")
     private Calendar dataAtualizacao;
     private boolean ativo;
 
