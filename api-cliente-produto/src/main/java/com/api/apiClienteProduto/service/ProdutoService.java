@@ -1,6 +1,7 @@
-package com.api.apiClienteProduto.entity.produto;
+package com.api.apiClienteProduto.service;
 
-import com.api.apiClienteProduto.entity.cliente.Cliente;
+import com.api.apiClienteProduto.entity.produto.Produto;
+import com.api.apiClienteProduto.entity.produto.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

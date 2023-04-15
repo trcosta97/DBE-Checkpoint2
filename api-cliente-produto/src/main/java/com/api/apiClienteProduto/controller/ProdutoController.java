@@ -1,7 +1,8 @@
 package com.api.apiClienteProduto.controller;
 
 import com.api.apiClienteProduto.entity.produto.Produto;
-import com.api.apiClienteProduto.entity.produto.ProdutoService;
+import com.api.apiClienteProduto.entity.usuario.Usuario;
+import com.api.apiClienteProduto.service.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +32,11 @@ public class ProdutoController {
             throw new IllegalArgumentException("Produto without data de cadastro");
         }
 
+    }
+
+    @GetMapping("/produtos/{id}")
+    public ResponseEntity<Produto> one(@PathVariable Long id){
+        return ResponseEntity.ofNullable(service.findById(id));
     }
 
 

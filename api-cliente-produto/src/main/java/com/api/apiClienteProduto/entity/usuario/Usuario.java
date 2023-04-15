@@ -1,4 +1,4 @@
-package com.api.apiClienteProduto.entity.cliente;
+package com.api.apiClienteProduto.entity.usuario;
 
 import com.api.apiClienteProduto.entity.endereco.Endereco;
 import com.api.apiClienteProduto.entity.produto.Produto;
@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class Cliente {
+public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -43,7 +43,7 @@ public class Cliente {
     private List<Produto> produtos;
     private boolean ativo = true;
 
-    public Cliente(Cliente entity) {
+    public Usuario(Usuario entity) {
         this.nome = entity.nome;
         this.email = entity.email;
         this.nomeMae = entity.nomeMae;
