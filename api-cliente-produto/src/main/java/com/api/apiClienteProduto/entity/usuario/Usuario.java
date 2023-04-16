@@ -1,7 +1,9 @@
 package com.api.apiClienteProduto.entity.usuario;
 
+import com.api.apiClienteProduto.entity.chavePix.ChavePix;
 import com.api.apiClienteProduto.entity.endereco.Endereco;
 import com.api.apiClienteProduto.entity.produto.Produto;
+import com.api.apiClienteProduto.entity.saldo.Saldo;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -56,6 +58,12 @@ public class Usuario {
     @JoinColumn(name = "cliente_id")
     @Column(columnDefinition = "VARCHAR", name = "produtos_usuario")
     private List<Produto> produtos;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private List<ChavePix> chavesPix;
+
+    @OneToOne(mappedBy = "usuario")
+    private Saldo saldo;
     private boolean ativo = true;
 
     public Usuario(Usuario entity) {
@@ -74,6 +82,8 @@ public class Usuario {
         this.dataCadastro = entity.dataCadastro;
         this.dataAtualizacao = entity.dataAtualizacao;
         this.produtos = entity.produtos;
+        this.chavesPix = entity.chavesPix;
+        this.saldo = entity.saldo;
         this.ativo = entity.ativo;
     }
 

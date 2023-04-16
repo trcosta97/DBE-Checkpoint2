@@ -17,12 +17,14 @@ public class UsuarioService {
     private UsuarioRepository repository;
 
     public Usuario saveUsuario(Usuario usuario){
+            return repository.save(usuario);
+        }
+
+
+    public void usuarioByCpf(Usuario usuario){
         List<Usuario> usuarioByCpf = repository.findAllByCpf(usuario.getCpf());
-        if(usuarioByCpf.size()>=3){
+        if(usuarioByCpf.size() >=3){
             throw new RuntimeException("Limite de contas por CPF atingido");
-        }else{
-            repository.save(usuario);
-            return usuario;
         }
     }
 

@@ -23,6 +23,7 @@ public class UsuarioController {
         validarUsuario(usuario);
         validarCPF(usuario.getCpf());
         validarEmail(usuario.getEmail());
+        validarCpfPorConta(usuario);
         service.saveUsuario(usuario);
         return ResponseEntity.ok(usuario);
     }
@@ -67,6 +68,10 @@ public class UsuarioController {
         }
     }
 
+    public void validarCpfPorConta(Usuario usuario){
+        service.usuarioByCpf(usuario);
+    }
+
     @GetMapping("/usuarios/all")
     public ResponseEntity<List<Usuario>> all(){
         return ResponseEntity.ok(service.getAllUsuarios());
@@ -85,6 +90,7 @@ public class UsuarioController {
         validarUsuario(usuarioAtualizado);
         validarCPF(usuarioAtualizado.getCpf());
         validarEmail(usuarioAtualizado.getEmail());
+        validarCpfPorConta(usuarioAtualizado);
         return ResponseEntity.ok(usuarioAtualizado);
 
     }
