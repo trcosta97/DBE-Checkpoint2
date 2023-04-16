@@ -1,5 +1,7 @@
 package com.api.apiClienteProduto.service;
 
+import com.api.apiClienteProduto.entity.transacaoPix.TransacaoPix;
+import com.api.apiClienteProduto.entity.transacaoPix.TransacaoPixRepository;
 import com.api.apiClienteProduto.entity.usuario.Usuario;
 import com.api.apiClienteProduto.entity.usuario.UsuarioRepository;
 import com.api.apiClienteProduto.entity.produto.Produto;
@@ -14,27 +16,28 @@ import java.util.Optional;
 public class UsuarioService {
 
     @Autowired
-    private UsuarioRepository repository;
+    private UsuarioRepository usuarioRepository;
+    private TransacaoPixRepository transacaoPixRepository;
 
     public Usuario saveUsuario(Usuario usuario){
-            return repository.save(usuario);
+            return usuarioRepository.save(usuario);
         }
 
 
     public void usuarioByCpf(Usuario usuario){
-        List<Usuario> usuarioByCpf = repository.findAllByCpf(usuario.getCpf());
+        List<Usuario> usuarioByCpf = usuarioRepository.findAllByCpf(usuario.getCpf());
         if(usuarioByCpf.size() >=3){
             throw new RuntimeException("Limite de contas por CPF atingido");
         }
     }
 
     public List<Usuario> getAllUsuarios(){
-        return repository.findAllByAtivoTrue()
+        return usuarioRepository.findAllByAtivoTrue()
                 .stream().map(Usuario::new).toList();
     }
 
     public Usuario findById(Long id){
-        Optional<Usuario> usuario = repository.findById(id);
+        Optional<Usuario> usuario = usuarioRepository.findById(id);
         if(usuario.isPresent()){
             return new Usuario(usuario.get());
         }
@@ -42,7 +45,7 @@ public class UsuarioService {
     }
 
     public Usuario updateUsuario(Usuario newUsuario, Long id) {
-        Optional<Usuario> usuarioOptional = repository.findById(id);
+        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
         if (usuarioOptional.isPresent()) {
             Usuario usuario = usuarioOptional.get();
             usuario.setNome(newUsuario.getNome());
@@ -61,7 +64,7 @@ public class UsuarioService {
             usuario.setDataAtualizacao(Calendar.getInstance());
             usuario.setProdutos(newUsuario.getProdutos());
             usuario.setAtivo(newUsuario.isAtivo());
-            repository.save(newUsuario);
+            usuarioRepository.save(newUsuario);
             return usuario;
 
         }
@@ -69,23 +72,23 @@ public class UsuarioService {
     }
 
     public Usuario addProduto(Produto newProduto, Long id){
-        Optional<Usuario> usuarioOptional = repository.findById(id);
+        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
         if(usuarioOptional.isPresent()){
             Usuario usuario = usuarioOptional.get();
             usuario.getProdutos().add(newProduto);
-            repository.save(usuario);
+            usuarioRepository.save(usuario);
             return usuario;
         }
         return null;
     }
 
     public Usuario delProduto(Produto produto, Long id){
-        Optional<Usuario> usuarioOptional = repository.findById(id);
+        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
         if(usuarioOptional.isPresent()){
             Usuario usuario = usuarioOptional.get();
             if(usuario.getProdutos().contains(produto)){
                 usuario.getProdutos().remove(produto);
-                repository.save(usuario);
+                usuarioRepository.save(usuario);
                 return usuario;
             }else{
                 throw new IllegalArgumentException();
@@ -95,17 +98,20 @@ public class UsuarioService {
     }
 
 
-
-
     public Usuario desativarUsuario(Long id){
-        Optional<Usuario> usuarioOptional = repository.findById(id);
+        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
         if(usuarioOptional.isPresent()){
             Usuario usuario = usuarioOptional.get();
             usuario.excluir();
-            repository.save(usuario);
+            usuarioRepository.save(usuario);
             return usuario;
         }
         return null;
     }
+
+
+
+
+
 
 }

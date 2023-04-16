@@ -9,3 +9,4 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     List<Usuario> findAllByCpf(String cpf);
 }
+

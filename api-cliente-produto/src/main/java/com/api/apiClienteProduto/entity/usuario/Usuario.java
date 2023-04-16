@@ -45,9 +45,9 @@ public class Usuario {
     @Column(name="pessoa_publica_usuario")
     private boolean pessoaPublica;
     @Column(name = "renda_usuario")
-    private Float renda;
+    private Double renda;
     @Column(name = "patrimonio_usuario")
-    private Float patrimonio;
+    private Double patrimonio;
     @Temporal(TemporalType.DATE)
     @Column(name = "data_cadastro_usuario")
     private Calendar dataCadastro = Calendar.getInstance();
@@ -62,7 +62,7 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<ChavePix> chavesPix;
 
-    @OneToOne(mappedBy = "usuario")
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
     private Saldo saldo;
     private boolean ativo = true;
 
