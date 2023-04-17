@@ -18,9 +18,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
+@SequenceGenerator(name = "usuario",sequenceName = "sq_t_usuario", allocationSize = 1)
 public class Usuario {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id_usuario")
     private Long id;
     @Column(name = "nome_usuario")
@@ -54,9 +55,8 @@ public class Usuario {
     @Temporal(TemporalType.DATE)
     @Column(name = "data_atualizacao_usuario")
     private Calendar dataAtualizacao;
-    @OneToMany
-    @JoinColumn(name = "cliente_id")
-    @Column(columnDefinition = "VARCHAR", name = "produtos_usuario")
+    @OneToMany(cascade = {CascadeType.ALL, CascadeType.MERGE})
+    @Embedded
     private List<Produto> produtos;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)

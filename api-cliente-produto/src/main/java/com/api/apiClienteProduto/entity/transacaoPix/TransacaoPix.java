@@ -16,9 +16,10 @@ import java.util.Calendar;
 @NoArgsConstructor
 @Getter
 @Setter
+@SequenceGenerator(name = "transacao_pix", sequenceName = "sq_t_transacaoPix", allocationSize = 1)
 public class TransacaoPix {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "transacao_pix_id")
     private Long id;
     @ManyToOne

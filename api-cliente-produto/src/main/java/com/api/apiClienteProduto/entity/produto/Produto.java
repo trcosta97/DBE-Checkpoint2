@@ -1,5 +1,6 @@
 package com.api.apiClienteProduto.entity.produto;
 
+import com.api.apiClienteProduto.entity.usuario.Usuario;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,9 +13,11 @@ import java.util.Calendar;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
+@SequenceGenerator(name = "produto", sequenceName = "sq_t_produto", allocationSize = 1)
+@Embeddable
 public class Produto {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     @Column(name = "nome_produto")
     private String nome;
@@ -23,12 +26,16 @@ public class Produto {
     @Temporal(TemporalType.DATE)
     @Column(name="data_atualziacao")
     private Calendar dataAtualizacao;
+    @ManyToOne
+    @JoinColumn(name = "id_usuario")
+    private Usuario usuario;
     private boolean ativo;
 
     public Produto(Produto produto) {
         this.nome = produto.getNome();
         this.dataCadastro = produto.getDataCadastro();
         this.dataAtualizacao = produto.getDataAtualizacao();
+        this.usuario = produto.getUsuario();
         this.ativo = produto.isAtivo();
     }
 
