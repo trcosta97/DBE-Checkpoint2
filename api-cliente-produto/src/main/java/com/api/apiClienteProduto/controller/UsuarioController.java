@@ -69,8 +69,12 @@ public class UsuarioController {
     }
 
     public void validarCpfPorConta(Usuario usuario){
-        service.usuarioByCpf(usuario);
-    }
+            List<Usuario> usuariosPorCpf = service.UsuariosByCpf(usuario.getCpf());
+            if(usuariosPorCpf.size() >=3){
+                throw new RuntimeException("Limite de contas por CPF atingido");
+            }
+        }
+
 
     @GetMapping("/usuarios/all")
     public ResponseEntity<List<Usuario>> all(){
@@ -87,7 +91,6 @@ public class UsuarioController {
     @Transactional
     public ResponseEntity<Usuario> replaceUsuario(@RequestBody Usuario newUsuario, @PathVariable Long id){
         Usuario usuarioAtualizado = service.updateUsuario(newUsuario, id);
-        validarUsuario(usuarioAtualizado);
         validarCPF(usuarioAtualizado.getCpf());
         validarEmail(usuarioAtualizado.getEmail());
         validarCpfPorConta(usuarioAtualizado);

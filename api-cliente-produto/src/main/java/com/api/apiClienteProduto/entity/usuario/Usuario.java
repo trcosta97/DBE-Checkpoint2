@@ -4,7 +4,6 @@ import com.api.apiClienteProduto.entity.chavePix.ChavePix;
 import com.api.apiClienteProduto.entity.endereco.Endereco;
 import com.api.apiClienteProduto.entity.produto.Produto;
 import com.api.apiClienteProduto.entity.saldo.Saldo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -56,7 +55,7 @@ public class Usuario {
     @Temporal(TemporalType.DATE)
     @Column(name = "data_atualizacao_usuario")
     private Calendar dataAtualizacao;
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<Produto> produtos;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)

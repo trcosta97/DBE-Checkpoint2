@@ -1,5 +1,6 @@
 package com.api.apiClienteProduto.service;
 
+import com.api.apiClienteProduto.entity.produto.ProdutoRepository;
 import com.api.apiClienteProduto.entity.transacaoPix.TransacaoPix;
 import com.api.apiClienteProduto.entity.transacaoPix.TransacaoPixRepository;
 import com.api.apiClienteProduto.entity.usuario.Usuario;
@@ -7,6 +8,7 @@ import com.api.apiClienteProduto.entity.usuario.UsuarioRepository;
 import com.api.apiClienteProduto.entity.produto.Produto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.List;
@@ -17,25 +19,28 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+    @Autowired
     private TransacaoPixRepository transacaoPixRepository;
+    @Autowired
+    private ProdutoRepository produtoRepository;
 
+    @Transactional
     public Usuario saveUsuario(Usuario usuario) {
         List<Produto> produtos = usuario.getProdutos();
         for (Produto produto : produtos) {
-            produto.setUsuario(usuario);
+            produtoRepository.save(produto);
         }
         Usuario usuarioPersistido = usuarioRepository.save(usuario);
         return usuarioPersistido;
     }
 
 
+    public List<Usuario> UsuariosByCpf(String cpf){
+        return usuarioRepository.findByCpfAndAtivo(cpf, true);
 
-    public void usuarioByCpf(Usuario usuario){
-        List<Usuario> usuarioByCpf = usuarioRepository.findAllByCpf(usuario.getCpf());
-        if(usuarioByCpf.size() >=3){
-            throw new RuntimeException("Limite de contas por CPF atingido");
-        }
     }
+
+
 
     public List<Usuario> getAllUsuarios(){
         return usuarioRepository.findAllByAtivoTrue()
@@ -69,6 +74,8 @@ public class UsuarioService {
             usuario.setDataCadastro(newUsuario.getDataCadastro());
             usuario.setDataAtualizacao(Calendar.getInstance());
             usuario.setProdutos(newUsuario.getProdutos());
+            usuario.setChavesPix(newUsuario.getChavesPix());
+            usuario.setSaldo(newUsuario.getSaldo());
             usuario.setAtivo(newUsuario.isAtivo());
             usuarioRepository.save(newUsuario);
             return usuario;

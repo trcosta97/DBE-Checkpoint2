@@ -7,6 +7,6 @@ import java.util.List;
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     List<Usuario> findAllByAtivoTrue();
 
-    List<Usuario> findAllByCpf(String cpf);
+    List<Usuario> findByCpfAndAtivo(String cpf, boolean ativo);
 }
 
