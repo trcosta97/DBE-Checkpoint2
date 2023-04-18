@@ -1,6 +1,7 @@
 package com.api.apiClienteProduto.entity.produto;
 
 import com.api.apiClienteProduto.entity.usuario.Usuario;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,10 +25,10 @@ public class Produto {
     @Temporal(TemporalType.DATE)
     private Calendar dataCadastro = Calendar.getInstance();
     @Temporal(TemporalType.DATE)
-    @Column(name="data_atualziacao")
+    @Column(name="data_atualizacao")
     private Calendar dataAtualizacao;
-    @ManyToOne
-    @JoinColumn(name = "id_usuario")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id")
     private Usuario usuario;
     private boolean ativo;
 

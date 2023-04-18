@@ -19,9 +19,15 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
     private TransacaoPixRepository transacaoPixRepository;
 
-    public Usuario saveUsuario(Usuario usuario){
-            return usuarioRepository.save(usuario);
+    public Usuario saveUsuario(Usuario usuario) {
+        List<Produto> produtos = usuario.getProdutos();
+        for (Produto produto : produtos) {
+            produto.setUsuario(usuario);
         }
+        Usuario usuarioPersistido = usuarioRepository.save(usuario);
+        return usuarioPersistido;
+    }
+
 
 
     public void usuarioByCpf(Usuario usuario){

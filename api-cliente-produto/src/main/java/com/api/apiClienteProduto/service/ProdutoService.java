@@ -4,6 +4,7 @@ import com.api.apiClienteProduto.entity.produto.Produto;
 import com.api.apiClienteProduto.entity.produto.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.List;
@@ -14,7 +15,7 @@ public class ProdutoService {
 
     @Autowired
     private ProdutoRepository repository;
-
+    @Transactional
     public Produto saveProduto(Produto produto){
         repository.save(produto);
         return produto;
