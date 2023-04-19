@@ -1,14 +1,24 @@
 package com.api.apiClienteProduto.controller;
 
-import com.api.apiClienteProduto.entity.usuario.Usuario;
-import com.api.apiClienteProduto.service.UsuarioService;
-import com.api.apiClienteProduto.entity.produto.Produto;
+import java.util.Calendar;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.api.apiClienteProduto.controller.dto.ProdutoDTO;
+import com.api.apiClienteProduto.controller.dto.UsuarioDTO;
+import com.api.apiClienteProduto.entity.produto.Produto;
+import com.api.apiClienteProduto.entity.usuario.Usuario;
+import com.api.apiClienteProduto.service.UsuarioService;
 
 @RestController
 public class UsuarioController {
@@ -16,10 +26,13 @@ public class UsuarioController {
     @Autowired
     private UsuarioService service;
 
-
     @PostMapping("/usuarios")
     @Transactional
-    public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody Usuario usuario){
+    public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody UsuarioDTO resource) {
+        Usuario usuario = new Usuario(resource.getNome(), resource.getEmail(), resource.getNomeMae(),
+                resource.getSenha(),
+                resource.getTelefone(), resource.getIdade(), resource.getEndereco(), resource.getCpf(),
+                resource.getRg(), resource.isPessoaPublica(), resource.getRenda(), resource.getPatrimonio());
         validarUsuario(usuario);
         validarCPF(usuario.getCpf());
         validarEmail(usuario.getEmail());
@@ -56,75 +69,111 @@ public class UsuarioController {
         }
     }
 
-    public void validarCPF(String cpf){
-        if(cpf.length() != 11){
+    public void validarCPF(String cpf) {
+        if (cpf.length() != 11) {
             throw new IllegalArgumentException("cpf inválido");
         }
     }
 
-    public void validarEmail(String email){
-        if(!email.contains("@")){
+    public void validarEmail(String email) {
+        if (!email.contains("@")) {
             throw new IllegalArgumentException("email inválido");
         }
     }
 
-    public void validarCpfPorConta(Usuario usuario){
-            List<Usuario> usuariosPorCpf = service.UsuariosByCpf(usuario.getCpf());
-            if(usuariosPorCpf.size() >=3){
-                throw new RuntimeException("Limite de contas por CPF atingido");
-            }
+    public void validarCpfPorConta(Usuario usuario) {
+        List<Usuario> usuariosPorCpf = service.UsuariosByCpf(usuario.getCpf());
+        if (usuariosPorCpf.size() >= 3) {
+            throw new RuntimeException("Limite de contas por CPF atingido");
         }
-
+    }
 
     @GetMapping("/usuarios/all")
-    public ResponseEntity<List<Usuario>> all(){
+    public ResponseEntity<List<Usuario>> all() {
         return ResponseEntity.ok(service.getAllUsuarios());
     }
 
     @GetMapping("/usuarios/{id}")
-    public ResponseEntity<Usuario> one(@PathVariable Long id){
+    public ResponseEntity<Usuario> one(@PathVariable Long id) {
         return ResponseEntity.ofNullable(service.findById(id));
     }
 
-
     @PutMapping("/usuarios/{id}")
     @Transactional
-    public ResponseEntity<Usuario> replaceUsuario(@RequestBody Usuario newUsuario, @PathVariable Long id){
-        Usuario usuarioAtualizado = service.updateUsuario(newUsuario, id);
-        validarCPF(usuarioAtualizado.getCpf());
-        validarEmail(usuarioAtualizado.getEmail());
-        validarCpfPorConta(usuarioAtualizado);
-        return ResponseEntity.ok(usuarioAtualizado);
+    public ResponseEntity<Usuario> replaceUsuario(@RequestBody UsuarioDTO resource, @PathVariable Long id) {
+        Usuario usuario = service.findById(id);
 
+        if (null == usuario) {
+            return ResponseEntity.notFound().build();
+        }
+
+        usuario.setNome(resource.getNome());
+        usuario.setEmail(resource.getEmail());
+        usuario.setNomeMae(resource.getNomeMae());
+        usuario.setSenha(resource.getSenha());
+        usuario.setTelefone(resource.getTelefone());
+        usuario.setIdade(resource.getIdade());
+        usuario.setEndereco(resource.getEndereco());
+        usuario.setCpf(resource.getCpf());
+        usuario.setRg(resource.getRg());
+        usuario.setPessoaPublica(resource.isPessoaPublica());
+        usuario.setRenda(resource.getRenda());
+        usuario.setPatrimonio(resource.getPatrimonio());
+        usuario.setDataCadastro(resource.getDataCadastro());
+        usuario.setDataAtualizacao(Calendar.getInstance());
+
+        // TODO: uma atualização de usuário pode atualizar os produtos desse usuário?
+        // usuario.setProdutos(resource.getProdutos()); <-- isso está errado
+        // Você não pode criar uma nova entidade simplesmente porque algo na entidade
+        // foi alterada.
+        // Você somente cria uma nova entidade quando o conceito relacionado à entidade
+        // não existe.
+        // Se for substituir a lista de produto por uma lista nova, ainda que os nomes
+        // coincidam, recomendo usar o produto como uma collection de embbeds.
+        resource.getProdutos().stream().map(ProdutoDTO::getNome).forEach(nomeProduto -> {
+            if (usuario.getProdutos().stream().map(Produto::getNome).filter(nome -> nome.equals(nomeProduto)).findAny()
+                    .isEmpty()) {
+                usuario.addProduto(nomeProduto);
+            }
+        });
+
+        // Mesma observação vale para as chaves pix
+        // usuario.setChavesPix(resource.getChavesPix());
+
+        // TODO: melhorar linha abaixo
+        usuario.getSaldo().setValor(resource.getSaldo().getValor());
+        usuario.setAtivo(resource.isAtivo());
+
+        validarCPF(usuario.getCpf());
+        validarEmail(usuario.getEmail());
+        validarCpfPorConta(usuario);
+
+        return ResponseEntity.ok(usuario);
     }
 
     @PutMapping("/usuarios/addProduto/{id}")
     @Transactional
-    public ResponseEntity<Usuario> adicionarProduto(@RequestBody Produto produto, @PathVariable Long id){
-        Usuario usuarioAtualizado = service.addProduto(produto, id);
-        return ResponseEntity.ofNullable(usuarioAtualizado);
+    public ResponseEntity<Usuario> adicionarProduto(@RequestBody ProdutoDTO resource, @PathVariable Long id) {
+        Usuario usuario = service.findById(id);
+
+        if (null == usuario) {
+            return ResponseEntity.notFound().build();
+        }
+
+        usuario.addProduto(resource.getNome());
+
+        return ResponseEntity.ofNullable(usuario);
     }
 
     @PutMapping("/usuarios/delProduto/{id}")
     @Transactional
-    public ResponseEntity<Usuario> removerProduto(@RequestBody Produto produto, @PathVariable Long id){
+    public ResponseEntity<Usuario> removerProduto(@RequestBody Produto produto, @PathVariable Long id) {
         Usuario usuarioAtualizado = service.delProduto(produto, id);
         return ResponseEntity.ofNullable(usuarioAtualizado);
     }
 
-
-
     @DeleteMapping("/usuarios/{id}")
-    public ResponseEntity<Usuario> desativarUsuario(@PathVariable Long id){
+    public ResponseEntity<Usuario> desativarUsuario(@PathVariable Long id) {
         return ResponseEntity.ofNullable(service.desativarUsuario(id));
     }
-
-
-
-
-
-
-
-
-
 }
