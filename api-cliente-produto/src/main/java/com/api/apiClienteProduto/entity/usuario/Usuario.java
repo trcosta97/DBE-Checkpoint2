@@ -1,49 +1,66 @@
 package com.api.apiClienteProduto.entity.usuario;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
 import com.api.apiClienteProduto.entity.chavePix.ChavePix;
 import com.api.apiClienteProduto.entity.endereco.Endereco;
 import com.api.apiClienteProduto.entity.produto.Produto;
 import com.api.apiClienteProduto.entity.saldo.Saldo;
-import jakarta.persistence.*;
-import lombok.*;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.util.Calendar;
-import java.util.List;
-
-@Entity(name="Usuario")
-@Table(name="t_usuarios")
+@Entity(name = "Usuario")
+@Table(name = "t_usuarios")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
-@SequenceGenerator(name = "usuario",sequenceName = "sq_t_usuario", allocationSize = 1)
+@SequenceGenerator(name = "usuario", sequenceName = "sq_t_usuario", allocationSize = 1)
 public class Usuario {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(generator = "usuario")
     @Column(name = "id_usuario")
     private Long id;
     @Column(name = "nome_usuario")
     private String nome;
-    @Column(name="email_usuario", unique = true)
+    @Column(name = "email_usuario", unique = true)
     private String email;
     @Column(name = "nome_mae_usuario")
     private String nomeMae;
-    @Column(name="senha_usuario")
+    @Column(name = "senha_usuario")
     private String senha;
     @Column(name = "telefone_usuario")
     private String telefone;
-    @Column(name="idade_usuario")
+    @Column(name = "idade_usuario")
     private Integer idade;
     @Embedded
-    @Column(name="endereco_usuario")
+    @Column(name = "endereco_usuario")
     private Endereco endereco;
-    @Column(name="cpf_usuario")
+    @Column(name = "cpf_usuario")
     private String cpf;
     @Column(name = "rg_usuario")
     private String rg;
-    @Column(name="pessoa_publica_usuario")
+    @Column(name = "pessoa_publica_usuario")
     private boolean pessoaPublica;
     @Column(name = "renda_usuario")
     private Double renda;
@@ -65,31 +82,40 @@ public class Usuario {
     private Saldo saldo;
     private boolean ativo = true;
 
-    public Usuario(Usuario entity) {
-        this.nome = entity.nome;
-        this.email = entity.email;
-        this.nomeMae = entity.nomeMae;
-        this.senha = entity.senha;
-        this.telefone = entity.telefone;
-        this.idade = entity.idade;
-        this.endereco = entity.endereco;
-        this.cpf = entity.cpf;
-        this.rg = entity.rg;
-        this.pessoaPublica = entity.pessoaPublica;
-        this.renda = entity.renda;
-        this.patrimonio = entity.patrimonio;
-        this.dataCadastro = entity.dataCadastro;
-        this.dataAtualizacao = entity.dataAtualizacao;
-        this.produtos = entity.produtos;
-        this.chavesPix = entity.chavesPix;
-        this.saldo = entity.saldo;
-        this.ativo = entity.ativo;
+    public void addProduto(String nome) {
+        // TODO: deveria haver um construtor com somente nome e usuário
+        Produto produto = new Produto();
+        produto.setNome(nome);
+        produto.setUsuario(this);
+        this.produtos.add(produto);
     }
 
-    public void excluir(){
+    public Usuario(String nome, String email, String nomeMae, String senha, String telefone, int idade,
+            Endereco endereco, String cpf,
+            String rg, boolean pessoaPublica, double renda, double patrimonio) {
+        this.nome = nome;
+        this.email = email;
+        this.nomeMae = nomeMae;
+        this.senha = senha;
+        this.telefone = telefone;
+        this.idade = idade;
+        this.endereco = endereco;
+        this.cpf = cpf;
+        this.rg = rg;
+        this.pessoaPublica = pessoaPublica;
+        this.renda = renda;
+        this.patrimonio = patrimonio;
+        this.dataCadastro = Calendar.getInstance();
+        this.dataAtualizacao = Calendar.getInstance();
+        this.produtos = new ArrayList<>();
+        this.chavesPix = new ArrayList<>();
+        // TODO: deveria haver um construtor com somente usuário
+        this.saldo = new Saldo();
+        this.saldo.setUsuario(this);
+        this.ativo = true;
+    }
+
+    public void excluir() {
         this.ativo = false;
     }
-
-
-
 }
