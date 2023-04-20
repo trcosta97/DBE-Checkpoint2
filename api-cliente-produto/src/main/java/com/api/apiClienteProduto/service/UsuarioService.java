@@ -1,5 +1,7 @@
 package com.api.apiClienteProduto.service;
 
+import com.api.apiClienteProduto.entity.chavePix.ChavePix;
+import com.api.apiClienteProduto.entity.chavePix.ChavePixRepository;
 import com.api.apiClienteProduto.entity.produto.ProdutoRepository;
 import com.api.apiClienteProduto.entity.transacaoPix.TransacaoPix;
 import com.api.apiClienteProduto.entity.transacaoPix.TransacaoPixRepository;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +26,8 @@ public class UsuarioService {
     private TransacaoPixRepository transacaoPixRepository;
     @Autowired
     private ProdutoRepository produtoRepository;
+    @Autowired
+    private ChavePixRepository chavePixRepository;
 
     @Transactional
     public Usuario saveUsuario(Usuario usuario) {
@@ -119,6 +124,25 @@ public class UsuarioService {
             usuarioRepository.save(usuario);
             return usuario;
         }
+        return null;
+    }
+
+    public Usuario addChavePix(ChavePix chavePix, Long id){
+        Optional<Usuario> usuarioSemChave = usuarioRepository.findById(id);
+        if(usuarioSemChave.isPresent()){
+            Usuario usuarioComChave = usuarioSemChave.get();
+//            chavePix.setUsuario(usuarioComChave);
+            List<ChavePix> chaves = new ArrayList<>();
+            chaves.add(chavePix);
+            for(ChavePix chave : usuarioSemChave.get().getChavesPix()){
+                chaves.add(chave);
+            }
+            usuarioComChave.setChavesPix(chaves);
+            chavePixRepository.save(chavePix);
+            return usuarioRepository.save(usuarioComChave);
+
+        }
+
         return null;
     }
 

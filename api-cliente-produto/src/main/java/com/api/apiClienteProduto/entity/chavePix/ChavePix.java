@@ -17,7 +17,6 @@ public class ChavePix {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id_chave_pix")
-
     private Long id;
     @Column(name = "tipo_chave_pix")
     @Enumerated(EnumType.STRING)

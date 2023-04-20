@@ -61,7 +61,7 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<ChavePix> chavesPix;
 
-    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
+    @Embedded
     private Saldo saldo;
     private boolean ativo = true;
 

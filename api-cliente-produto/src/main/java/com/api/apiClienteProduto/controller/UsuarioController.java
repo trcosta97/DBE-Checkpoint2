@@ -1,5 +1,6 @@
 package com.api.apiClienteProduto.controller;
 
+import com.api.apiClienteProduto.entity.chavePix.ChavePix;
 import com.api.apiClienteProduto.entity.usuario.Usuario;
 import com.api.apiClienteProduto.service.UsuarioService;
 import com.api.apiClienteProduto.entity.produto.Produto;
@@ -117,6 +118,12 @@ public class UsuarioController {
     @DeleteMapping("/usuarios/{id}")
     public ResponseEntity<Usuario> desativarUsuario(@PathVariable Long id){
         return ResponseEntity.ofNullable(service.desativarUsuario(id));
+    }
+
+    @PutMapping("/usuarios/addPix/{id}")
+    public ResponseEntity<Usuario> addChavePix(@PathVariable Long id, @RequestBody ChavePix chavePix){
+        Usuario usuarioAtualizado = service.addChavePix(chavePix, id);
+        return ResponseEntity.ofNullable(usuarioAtualizado);
     }
 
 

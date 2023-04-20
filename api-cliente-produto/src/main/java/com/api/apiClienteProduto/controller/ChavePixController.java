@@ -18,20 +18,20 @@ public class ChavePixController {
     private UsuarioService usuarioService;
 
 
-    @PostMapping("/chavePix")
-    public ResponseEntity<ChavePix> criarChavePix(@RequestBody ChavePix chavePix) {
-        Usuario usuario = usuarioService.findById(chavePix.getUsuario().getId());
-        if (usuario != null && usuario.isAtivo()) {
-            if (usuario.getChavesPix().size() >= 5) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-            } else {
-                ChavePix novaChavePix = chavePixService.saveChavePix(chavePix);
-                return ResponseEntity.ok(novaChavePix);
-            }
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-    }
+//    @PostMapping("/chavePix")
+//    public ResponseEntity<ChavePix> criarChavePix(@RequestBody ChavePix chavePix) {
+//        Usuario usuario = usuarioService.findById(chavePix.getUsuario().getId());
+//        if (usuario != null && usuario.isAtivo()) {
+//            if (usuario.getChavesPix().size() >= 5) {
+//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+//            } else {
+//                ChavePix novaChavePix = chavePixService.saveChavePix(chavePix);
+//                return ResponseEntity.ok(novaChavePix);
+//            }
+//        } else {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+//        }
+//    }
 
 
 

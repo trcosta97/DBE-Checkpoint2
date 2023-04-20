@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -48,7 +49,7 @@ public class TransacaoPixService {
             usuarioCredito.getSaldo().setValor(novoSaldoCredito);
             transacaoPix.setStatus("SUCESSO");
             transacaoPix.setDescricao("TRANSAÇÃO EFETUADA");
-            transacaoPix.setDataTransicao(Calendar.getInstance());
+            transacaoPix.setDataTransacao(Calendar.getInstance());
             transacaoPixRepository.save(transacaoPix);
             salvarUsuario(usuarioDebito);
             salvarUsuario(usuarioCredito);
@@ -59,6 +60,28 @@ public class TransacaoPixService {
     private void salvarUsuario(Usuario usuario) {
         usuarioRepository.save(usuario);
     }
+
+    public List<TransacaoPix> transacoesRecebidasUltimos7Dias(Long id){
+        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
+        List<TransacaoPix> transacoes = null;
+        List<TransacaoPix> transacoesNosUltimos7Dias = null;
+        Calendar seteDiasAtras = Calendar.getInstance();
+        seteDiasAtras.add(Calendar.DAY_OF_YEAR, -7);
+        if(usuarioOptional.isPresent()){
+            Usuario usuario = usuarioOptional.get();
+            transacoes = transacaoPixRepository.findByUsuarioCreditoId(id);
+            for(TransacaoPix transacao : transacoes){
+                if(transacao.getDataTransacao().before(seteDiasAtras)){
+                    transacoesNosUltimos7Dias.add(transacao);
+                }
+            }
+            return transacoesNosUltimos7Dias;
+        }
+        return null;
+    }
+
+
+
 
 
 

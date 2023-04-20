@@ -36,6 +36,13 @@ public class TransacaoPix {
     private String descricao;
     @Column(name = "transacao_pix_data")
     @Temporal(TemporalType.TIMESTAMP)
-    private Calendar dataTransicao;
+    private Calendar dataTransacao;
+
+    @Override
+    public String toString(){
+        return ("Usuário debitado: " + this.usuarioDebito.getNome() + " | Usuário crediatado: " +
+                this.usuarioCredito.getNome() + " | Valor da tranferência: " + this.valor + " | " +
+                "Data da transação: " + this.dataTransacao);
+    }
 
 }
