@@ -38,6 +38,13 @@ public class TransacaoPix {
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar dataTransacao;
 
+    public TransacaoPix(TransacaoPixDTO transacaoPixDTO) {
+        this.usuarioCredito = transacaoPixDTO.usuarioCredito();
+        this.usuarioDebito = transacaoPixDTO.usuarioDebito();
+        this.valor = transacaoPixDTO.valor();
+        this.dataTransacao = Calendar.getInstance();
+    }
+
     @Override
     public String toString(){
         return ("Usuário debitado: " + this.usuarioDebito.getNome() + " | Usuário crediatado: " +

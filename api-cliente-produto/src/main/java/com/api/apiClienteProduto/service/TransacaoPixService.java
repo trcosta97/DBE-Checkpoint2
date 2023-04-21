@@ -1,6 +1,7 @@
 package com.api.apiClienteProduto.service;
 
 import com.api.apiClienteProduto.entity.transacaoPix.TransacaoPix;
+import com.api.apiClienteProduto.entity.transacaoPix.TransacaoPixDTO;
 import com.api.apiClienteProduto.entity.transacaoPix.TransacaoPixRepository;
 import com.api.apiClienteProduto.entity.usuario.Usuario;
 import com.api.apiClienteProduto.entity.usuario.UsuarioRepository;
@@ -62,22 +63,17 @@ public class TransacaoPixService {
     }
 
     public List<TransacaoPix> transacoesRecebidasUltimos7Dias(Long id){
-        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
-        List<TransacaoPix> transacoes = null;
-        List<TransacaoPix> transacoesNosUltimos7Dias = null;
         Calendar seteDiasAtras = Calendar.getInstance();
         seteDiasAtras.add(Calendar.DAY_OF_YEAR, -7);
-        if(usuarioOptional.isPresent()){
-            Usuario usuario = usuarioOptional.get();
-            transacoes = transacaoPixRepository.findByUsuarioCreditoId(id);
-            for(TransacaoPix transacao : transacoes){
-                if(transacao.getDataTransacao().before(seteDiasAtras)){
-                    transacoesNosUltimos7Dias.add(transacao);
-                }
-            }
-            return transacoesNosUltimos7Dias;
-        }
-        return null;
+        return transacaoPixRepository.findAllByUsuarioCreditoIdAndDataTransacaoBetween(id, seteDiasAtras,Calendar.getInstance());
+
+    }
+
+    public List<TransacaoPix> transacoesEfetuadasUltimos7Dias(Long id){
+        Calendar seteDiasAtras = Calendar.getInstance();
+        seteDiasAtras.add(Calendar.DAY_OF_YEAR, -7);
+        return transacaoPixRepository.findAllByUsuarioDebitoIdAndDataTransacaoBetween(id, seteDiasAtras,Calendar.getInstance());
+
     }
 
 
