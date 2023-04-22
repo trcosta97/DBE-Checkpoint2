@@ -19,7 +19,6 @@ public class UsuarioController {
 
 
     @PostMapping("/usuarios")
-    @Transactional
     public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody Usuario usuario){
         validarUsuario(usuario);
         validarCPF(usuario.getCpf());

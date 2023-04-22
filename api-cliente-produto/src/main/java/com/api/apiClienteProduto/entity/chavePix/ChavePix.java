@@ -1,6 +1,7 @@
 package com.api.apiClienteProduto.entity.chavePix;
 
 import com.api.apiClienteProduto.entity.usuario.Usuario;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,8 +22,9 @@ public class ChavePix {
     @Column(name = "tipo_chave_pix")
     @Enumerated(EnumType.STRING)
     private TipoChave tipo;
-    @ManyToOne
-    @JoinColumn(name = "id_usuario")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id")
+    @JsonBackReference
     private Usuario usuario;
     @Column(name = "valor_chave_pix")
     private String valor;

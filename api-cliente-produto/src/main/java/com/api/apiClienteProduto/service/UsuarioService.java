@@ -29,13 +29,22 @@ public class UsuarioService {
     @Autowired
     private ChavePixRepository chavePixRepository;
 
-    @Transactional
     public Usuario saveUsuario(Usuario usuario) {
+        Usuario usuarioPersistido = usuarioRepository.save(usuario);
         List<Produto> produtos = usuario.getProdutos();
+
         for (Produto produto : produtos) {
+            produto.setUsuario(usuarioPersistido);
             produtoRepository.save(produto);
         }
-        Usuario usuarioPersistido = usuarioRepository.save(usuario);
+
+        List<ChavePix> chaves = usuario.getChavesPix();
+
+        for (ChavePix chave : chaves){
+            chave.setUsuario(usuarioPersistido);
+            chavePixRepository.save(chave);
+        }
+
         return usuarioPersistido;
     }
 
@@ -94,6 +103,8 @@ public class UsuarioService {
         if(usuarioOptional.isPresent()){
             Usuario usuario = usuarioOptional.get();
             usuario.getProdutos().add(newProduto);
+            newProduto.setUsuario(usuario);
+            produtoRepository.save(newProduto);
             usuarioRepository.save(usuario);
             return usuario;
         }
@@ -131,7 +142,6 @@ public class UsuarioService {
         Optional<Usuario> usuarioSemChave = usuarioRepository.findById(id);
         if(usuarioSemChave.isPresent()){
             Usuario usuarioComChave = usuarioSemChave.get();
-//            chavePix.setUsuario(usuarioComChave);
             List<ChavePix> chaves = new ArrayList<>();
             chaves.add(chavePix);
             for(ChavePix chave : usuarioSemChave.get().getChavesPix()){

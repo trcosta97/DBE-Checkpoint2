@@ -1,7 +1,7 @@
 package com.api.apiClienteProduto.service;
 
 import com.api.apiClienteProduto.entity.transacaoPix.TransacaoPix;
-import com.api.apiClienteProduto.entity.transacaoPix.TransacaoPixDTO;
+
 import com.api.apiClienteProduto.entity.transacaoPix.TransacaoPixRepository;
 import com.api.apiClienteProduto.entity.usuario.Usuario;
 import com.api.apiClienteProduto.entity.usuario.UsuarioRepository;
@@ -57,6 +57,7 @@ public class TransacaoPixService {
         }
         return transacaoPix;
     }
+
 
     private void salvarUsuario(Usuario usuario) {
         usuarioRepository.save(usuario);

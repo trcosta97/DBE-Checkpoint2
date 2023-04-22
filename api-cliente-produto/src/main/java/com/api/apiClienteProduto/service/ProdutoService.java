@@ -17,8 +17,11 @@ public class ProdutoService {
     private ProdutoRepository repository;
     @Transactional
     public Produto saveProduto(Produto produto){
+        return repository.save(produto);
+    }
+
+    public void saveProdutoNoReturn (Produto produto){
         repository.save(produto);
-        return produto;
     }
 
     public List<Produto> getAllProdutos(){

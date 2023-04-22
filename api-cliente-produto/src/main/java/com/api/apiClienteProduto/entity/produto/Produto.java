@@ -29,6 +29,7 @@ public class Produto {
     private Calendar dataAtualizacao;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
+    @JsonBackReference
     private Usuario usuario;
     private boolean ativo;
 
